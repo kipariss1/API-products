@@ -37,7 +37,7 @@ except:
     DEBUG = True
 
 conn.commit()                   # committing the changes in products_offers.db
-conn.close()                    # closing the connection with products_offers.db
+
 
 # curs.execute('SELECT * FROM products')      # selecting all rows from products table
 # print(curs.fetchall())                      # printing them all
@@ -62,6 +62,43 @@ def return_all():
         curs_1 = conn_1.cursor()
         all = curs_1.execute('SELECT * FROM products').fetchall()
     return flask.jsonify(all)
+
+
+@app.errorhandler(404)                                                  # error handler to show code of the error
+def page_not_found(e):
+    return "<h1>404</h1><p>The resource could not be found.</p>", 404
+
+
+# Example of usage:
+# http://127.0.0.1:5000/all/API/products/filter?name=banana&?id=1
+
+@app.route('/all/API/products/filter', methods=['GET'])
+def api_filter():
+    query_parameters = flask.request.args       # request all arguments like ?id from http query
+
+    id_p = query_parameters.get('id')           # fetching arguments from http query
+    price = query_parameters.get('price')
+    name = query_parameters.get('name')
+
+    query = "SELECT * FROM products WHERE "         # forming a query for products_offers.db
+    to_filter = []                                  # empty list for filtering parameters
+    conn_1 = sqlite3.connect('products_offers.db')  # forming a connection for local function
+    with conn_1:
+        curs_1 = conn_1.cursor()
+        if id_p:
+            query += "id = ? AND"
+            to_filter.append(id_p)
+        if price:
+            query += "price = ? AND"
+            to_filter.append(price)
+        if name:
+            query += "name = ? AND"
+            to_filter.append(name)
+
+    query = query[:-4]+";"                              # cutting the query
+    all = curs_1.execute(query, to_filter).fetchall()   # fetching results from products_offers.db
+
+    return flask.jsonify(all)                           
 
 #  TODO: methods for add, delete, update; Filter the results by id, price ....
 
@@ -135,4 +172,6 @@ def update_product(type_s, value, type_u, new_value):
 # conn.commit()                   # committing the changes in products_offers.db
 # conn.close()                    # closing the connection with products_offers.db
 
+
 app.run()
+conn.close()                    # closing the connection with products_offers.db
