@@ -1,3 +1,4 @@
+#  TODO: methods for add, delete, update; html pages for add, delete, upgrade
 import sqlite3
 import flask
 from product import Product
@@ -48,11 +49,7 @@ conn.commit()                   # committing the changes in products_offers.db
 
 @app.route('/', methods=['GET'])
 def home():
-    return """
-    <title>Test API</title>
-    <h1> This is test API for products database </h1>
-    <p>this is prototype API</p>
-    """
+    return flask.render_template("main.html")           # path is "venv/templates/main.html"
 
 
 @app.route('/all', methods=['GET'])
@@ -98,9 +95,13 @@ def api_filter():
     query = query[:-4]+";"                              # cutting the query
     all = curs_1.execute(query, to_filter).fetchall()   # fetching results from products_offers.db
 
-    return flask.jsonify(all)                           
+    return flask.jsonify(all)
 
-#  TODO: methods for add, delete, update; Filter the results by id, price ....
+
+@app.route('/all/API/add', methods=['GET', 'POST'])
+def dummy_add_product():
+    if flask.request.method == "POST":
+        pass
 
 
 def add_product(product):
