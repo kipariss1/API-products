@@ -1,7 +1,8 @@
-#  TODO: methods for add, delete, update; html pages for add, delete, upgrade
+#  TODO: finish the dummy_add_product function
 import sqlite3
 import flask
 from product import Product
+from wtforms import Form
 
 app = flask.Flask(__name__)         # setting up API app
 app.config["DEBUG"] = True          # debugging is on
@@ -98,10 +99,19 @@ def api_filter():
     return flask.jsonify(all)
 
 
+class AddProductForm(Form):             # id of text fields is ids os inputs in add_product.html (?)
+    id = TextField('input_id')
+    price = TextField('input_price')
+    name = TextField('input_name')
+    desc = TextField('input_desc')
+
+
 @app.route('/all/API/add', methods=['GET', 'POST'])
 def dummy_add_product():
+    conn_1 = sqlite3.connect('products_offers.db')
     if flask.request.method == "POST":
         pass
+    return flask.render_template("add_product.html")
 
 
 def add_product(product):
