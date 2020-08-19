@@ -99,11 +99,11 @@ def api_filter():
     return flask.jsonify(all)
 
 
-class AddProductForm(Form):             # id of text fields is ids os inputs in add_product.html (?)
-    id = TextField('input_id')
-    price = TextField('input_price')
-    name = TextField('input_name')
-    desc = TextField('input_desc')
+# class AddProductForm(Form):             # id of text fields is ids os inputs in add_product.html (?)
+#     id = TextField('input_id')
+#     price = TextField('input_price')
+#     name = TextField('input_name')
+#     desc = TextField('input_desc')
 
 
 @app.route('/all/API/add', methods=['GET', 'POST'])
